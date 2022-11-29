@@ -1,0 +1,158 @@
+<html>
+    <head>
+        <!-- Font Awesome -->
+        <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+            rel="stylesheet"
+        />
+        <!-- Google Fonts -->
+        <link
+            href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+            rel="stylesheet"
+        />
+        <!-- MDB -->
+        <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.0.1/mdb.min.css"
+            rel="stylesheet"
+        />
+    </head>
+    <body>
+    <!-- Start your project here-->
+        <div class="container" id="run_details">
+            <h2>Run</h2>
+            <a class="dropdown-toggle hidden-arrow btn btn-primary" href="#" id="navbarDropdownMenuLink" role="button" data-mdb-toggle="dropdown" aria-expanded="false">Rider</a>
+            <ul class="dropdown-menu dropdown-menu-left" aria-labelledby="navbarDropdownMenuLink">
+                <li>
+                    <div class="input-group mt-2 mx-2">
+                    <div class="form-outline w-auto">
+                        <input type="search" id="form1" class="form-control-dropdown" />
+                        <label class="form-label" for="form1">Search</label>
+                    </div>
+                    </div>
+                </li>
+                <li><hr class="dropdown-divider" /></li>
+                <li><a class="dropdown-item" href="#">Action</a></li>
+                <li><a class="dropdown-item" href="#">Another action</a></li>
+                <li><a class="dropdown-item" href="#">Something else here</a></li>
+            </ul>
+            <div class="btn-group" aria-label="Run">
+                <input type="radio" class="btn-check" name="run" id="run1" autocomplete="off" checked />
+                <label class="btn btn-secondary" for="run1">Run 1</label>
+              
+                <input type="radio" class="btn-check" name="run" id="run2" autocomplete="off" />
+                <label class="btn btn-secondary" for="run2">Run 2</label>
+            </div>
+
+            <div class="btn-group" aria-label="Round">
+                <input type="radio" class="btn-check" name="round" id="qualifiers" autocomplete="off" checked />
+                <label class="btn btn-secondary" for="qualifiers">Qualifiers</label>
+              
+                <input type="radio" class="btn-check" name="round" id="finals" autocomplete="off" />
+                <label class="btn btn-secondary" for="finals">Finals</label>
+            </div>
+
+        </div>
+        <div class="container" id="tricks">
+            <h2>Tricks</h2>
+        </div>
+        <div class="container" id="footwork">
+            <h2>Footwork</h2>
+            <div class="row">
+                <div class="col-md">
+                    <input type="range" min="0" step="1" value="0" max="5" class="form-range" id="footwork_speed">
+                    <label class="form-label" for="footwork_speed">Speed</label>
+                </div>
+                <div class="col-md">
+                    <input type="range" min="0" step="1"  value="0" max="5" class="form-range" id="footwork_smoothness">
+                    <label class="form-label" for="footwork_smoothness">Smoothness</label>
+                </div>
+                <div class="col-md">
+                    <input type="range" min="0" step="1"  value="0" max="5" class="form-range" id="footwork_variety">
+                    <label class="form-label" for="footwork_variety">Variety</label>
+                </div>
+                <div class="col-md">
+                    <input type="range" min="0" step="1"  value="0" max="5" class="form-range" id="footwork_difficulty">
+                    <label class="form-label" for="footwork_difficulty">Difficulty</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="container" id="bails">
+            <h2>Consistency</h2>
+            <div class="row">
+                <div class="col-md">
+                    <input type="number" min="0" placeholder="0" step="1" class="form-control" id="minorBails">
+                    <label class="form-label" for="minorBails">Minor bails</label>
+                </div>
+                <div class="col-md">
+                    <input type="number" min="0" placeholder="0" step="1" class="form-control" id="mediumBails">
+                    <label class="form-label" for="mediumBails">Medium bails</label>
+                </div>
+                <div class="col-md">
+                    <input type="number" min="0" placeholder="0" step="1" class="form-control" id="majorBails">
+                    <label class="form-label" for="majorBails">Major bails</label>
+                </div>
+            </div>
+        </div>
+        <div class="container" id="variety_and_innovation">
+            <h2>Variety and innovation</h2>
+            <div class="row">
+                <div class="col-md">
+                    <input type="range" min="0" step="" max="20" value="0" class="form-range" id=trick_balance">
+                    <label class="form-label" for="trick_balance">Balanced trick/trick group selection</label>
+                </div>
+                <div class="col-md">
+                    <input type="range" min="0" step="2.5"  max="10" value="0" class="form-range" id="rare_or_new_tricks">
+                    <label class="form-label" for="rare_or_new_tricks">Rare or new tricks</label>
+                </div>
+            </div>
+        </div>
+        <div class="container" id="music">
+            <h2>Music choice and synchronization</h2>
+            <div class="row">
+                <div class="col-md">
+                    <input type="range" min="0" step="2.5" max="10" value="0" class="form-range" id="music_fit_the_run">
+                    <label class="form-label" for="music_fit_the_run">The music fit the run</label>
+                </div>
+                <div class="col-md">
+                    <input type="range" min="0" step="2.5"  max="10" value="0" class="form-range" id="run_synchronized_with_music">
+                    <label class="form-label" for="run_synchronized_with_music">Run synchronized with the music</label>
+                </div>
+            </div>
+        </div>
+        <div class="container" id="run_composition">
+            <h2>Run composition</h2>
+            <input type="range" min="0" step="3" max="15" value="0" class="form-range" id="run_composition">
+            <label class="form-label" for="run_composition">Run composition</label>
+        </div>
+        <div class="container" id="mastery_and_style">
+            <h2>Mastery and style</h2>
+            <div class="row">
+                <div class="col-md">
+                    <input type="range" min="0" step="2.5" max="10" value="0" class="form-range" id="confident_and_effortless">
+                    <label class="form-label" for="confident_and_effortless">Confidence and effortlessness</label>
+                </div>
+                <div class="col-md">
+                    <input type="range" min="0" step="3"  max="15" value="0" class="form-range" id="trick_flow">
+                    <label class="form-label" for="trick_flow">Flow</label>
+                </div>
+                <div class="col-md">
+                    <input type="range" min="0" step="2.5"  max="10" value="0" class="form-range" id="personal_touch" oninput="num.value = this.value">
+                    <label class="form-label" for="personal_touch">Personal touch</label>
+                </div>
+            </div>
+        </div>
+        <div class="container" id="submission">
+            <div class="btn-group" role="group" aria-label="submit">
+                <button type="button" class="btn btn-primary" id="cancel">Cancel</button>
+                <button type="button" class="btn btn-primary" id="submit">Submit</button>
+            </div>
+        </div>
+        <div id=""></div>
+    <!-- End your project here-->
+    <!-- MDB -->
+    <script type="text/javascript" src="js/mdb.min.js"></script>
+    <!-- Custom scripts -->
+    <script type="text/javascript"></script>
+    </body>
+</html>
