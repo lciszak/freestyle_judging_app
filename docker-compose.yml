@@ -1,0 +1,43 @@
+version: '3'
+
+services:
+  postgres-database:
+   restart: unless-stopped
+   build: ./judging_app_db
+   container_name: postgres-database
+   image: postgres:15.1-alpine
+   ports:
+        - '5432:5432'
+   environment:
+        POSTGRES_USER: 'fsrest'
+        POSTGRES_PASSWORD: 'fsrest'
+        POSTGRES_DB: 'fsrest'
+   volumes:
+        - ./freestyle_judging_db/init:/docker-entrypoint-initdb.d/
+        #- C:\Temp\data
+   networks:
+        - fs-network
+  fastapi:
+    restart: unless-stopped
+    hostname: localhost
+    container_name: fastapi
+    build: 
+        context: ./medical_coding_UI
+    ports:
+      - 88:80
+    networks:
+       - fs-network     
+  webapp:
+    restart: unless-stopped
+    build: ./judging_app_v2
+    container_name: judging_app
+    ports:
+      - 8080:8080
+      - 5005:5005
+    networks:
+      - fs-network
+
+networks:
+   mc-network:
+        driver: bridge
+

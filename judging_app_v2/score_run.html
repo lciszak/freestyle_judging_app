@@ -15,27 +15,89 @@
             href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.0.1/mdb.min.css"
             rel="stylesheet"
         />
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+        <script>
+        $(function(){
+        $("#rider").select2();
+        }); 
+        </script>
+
     </head>
     <body>
     <!-- Start your project here-->
-        <div class="container" id="run_details">
-            <h2>Run</h2>
-            <a class="dropdown-toggle hidden-arrow btn btn-primary" href="#" id="navbarDropdownMenuLink" role="button" data-mdb-toggle="dropdown" aria-expanded="false">Rider</a>
-            <ul class="dropdown-menu dropdown-menu-left" aria-labelledby="navbarDropdownMenuLink">
-                <li>
-                    <div class="input-group mt-2 mx-2">
-                    <div class="form-outline w-auto">
-                        <input type="search" id="form1" class="form-control-dropdown" />
-                        <label class="form-label" for="form1">Search</label>
-                    </div>
-                    </div>
-                </li>
-                <li><hr class="dropdown-divider" /></li>
-                <li><a class="dropdown-item" href="#">Action</a></li>
-                <li><a class="dropdown-item" href="#">Another action</a></li>
-                <li><a class="dropdown-item" href="#">Something else here</a></li>
-            </ul>
-            <div class="btn-group" aria-label="Run">
+    <nav class="navbar navbar-light bg-light">
+        <a class="navbar-brand" href="#">
+          <img src="logo-black.svg" height="50" alt="">
+        </a>
+    </nav>
+    <br><br>
+    <div class="container" id="run_details">
+        <h2>Run</h2>
+        <div class="form-group form-inline">   
+            <label class="form-label" for="judge">Judge</label> 
+            <select class="form-select" aria-label="judge" id="judge">
+                 <option selected></option>
+            </select>
+            <script>
+                const judges = document.querySelector("#judge");
+                let contest_id=1
+                fetch('http://localhost:8000/get_judge?contest_id='+contest_id,{
+                    credentials: 'omit',
+                    mode: 'cors'
+                }
+                )
+                .then((response) => response.json())
+                .then((data) => {
+                    
+                    for(let i = 0; i < data.length; i++) {
+                        let judge = data[i];
+                        judges.innerHTML += '<option value="'+judge.judge_id+'">'+judge.judge_name+'</option>';
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+                //judges.innerHTML += '<option value="1">Lukasz Ciszak</option>';
+            </script>
+        </div>
+        <br>
+
+        <br>
+        <div class="form-group form-inline">
+            <label class="form-label" for="rider">Rider</label>
+            <select class="form-select" aria-label="rider" data-live-search="true" id="rider">
+                <option selected></option>
+            </select>
+
+           <script>
+               
+               const riders = document.getElementById("rider");
+               fetch('http://localhost:8000/get_rider?contest_id='+contest_id,{
+                   credentials: 'omit',
+                   mode: 'cors'
+               }
+               )
+               .then((response) => response.json())
+               .then((data) => {
+                   for(let i = 0; i < data.length; i++) {
+                       let rdr = data[i];
+                       inner_html = '<option value="'+rdr.rider_id+'" data-tokens="'+rdr.rider_id+'">'+rdr.rider_name+'</option>';
+                       console.log(inner_html)
+                       riders.innerHTML += inner_html;
+                   }
+               })
+               .catch((error) => {
+                   console.error('Error:', error);
+               });
+           </script>
+          
+
+        </div>
+          <br>
+        <div class="btn-group" aria-label="Run" id="run">
                 <input type="radio" class="btn-check" name="run" id="run1" autocomplete="off" checked />
                 <label class="btn btn-secondary" for="run1">Run 1</label>
               
@@ -43,7 +105,7 @@
                 <label class="btn btn-secondary" for="run2">Run 2</label>
             </div>
 
-            <div class="btn-group" aria-label="Round">
+            <div class="btn-group" aria-label="Round" id="round">
                 <input type="radio" class="btn-check" name="round" id="qualifiers" autocomplete="off" checked />
                 <label class="btn btn-secondary" for="qualifiers">Qualifiers</label>
               
@@ -52,9 +114,76 @@
             </div>
 
         </div>
+        <hr/>
         <div class="container" id="tricks">
             <h2>Tricks</h2>
+            <div id="calculator" class="p-3 mb-2 bg-light text-dark">
+                <div class="row">
+                    <div class="col">
+                        <input type="text" class="form-control" id="points_display" disabled>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <input type="text" class="form-control" id="bails_display" disabled>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-md"><button data-action="add" class="btn btn-secondary btn-rounded btn-block">1</button></div>
+                    <div class="col-md"><button data-action="add" class="btn btn-secondary btn-rounded btn-block">2</button></div>
+                    <div class="col-md"><button data-action="add" class="btn btn-secondary btn-rounded btn-block">3</button></div>
+                    <div class="col-md"><button data-action="bail" class="btn btn-warning btn-rounded btn-block">-1</button></div>
+                </div>
+                <div class="row">
+                    <div class="col-md"><button data-action="add" class="btn btn-secondary btn-rounded btn-block">4</button></div>
+                    <div class="col-md"><button data-action="add" class="btn btn-secondary btn-rounded btn-block">5</button></div>
+                    <div class="col-md"><button data-action="add" class="btn btn-secondary btn-rounded btn-block">6</button></div>
+                    <div class="col-md"><button data-action="bail" class="btn btn-warning btn-rounded btn-block">-2</button></div>
+                </div>
+                <div class="row">
+                    <div class="col-md"><button data-action="add" class="btn btn-secondary btn-rounded btn-block">7</button></div>
+                    <div class="col-md"><button data-action="add" class="btn btn-secondary btn-rounded btn-block">8</button></div>
+                    <div class="col-md"><button data-action="add" class="btn btn-secondary btn-rounded btn-block">9</button></div>
+                    <div class="col-md"><button data-action="bail" class="btn btn-warning btn-rounded btn-block">-3</button></div>
+                </div>
+                <div class="row">
+                    <div class="col-md"><button data-action="add" class="btn btn-secondary btn-rounded btn-block">10</button></div>
+                    <div class="col-md"></div>
+                    <div class="col-md"><button data-action="add" class="btn btn-secondary btn-rounded btn-block">0.5</button></div>
+                    <div class="col-md"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md"><button class="btn btn-success btn-block" data-action="finalize">Finalize</button></div>
+                    <div class="col-md"><button class="btn btn-danger btn-block" data-action="reset">Reset</button></div>
+                    <div class="col-md"><button class="btn btn-dark btn-block" data-action="undo">undo</button></div>
+                </div>
+            </div>
+            <br>
+            <input type="number" class="form-control" id="trick_points_total" disabled value="0">
+            <label class="form-label" for="trick_points_total">Trick points</label>
+           
         </div>
+        <br>
+        <div class="container" id="bails">
+            <h2>Consistency</h2>
+            <div class="row">
+                <div class="col-md">
+                    <input type="number" class="form-control" id="minor_bails" disabled value="0">
+                    <label class="form-label" for="minor_bails">Minor bails</label>
+                </div>
+                <div class="col-md">
+                    <input type="number" class="form-control" id="medium_bails" disabled value="0">
+                    <label class="form-label" for="medium_bails">Medium bails</label>
+                </div>
+                <div class="col-md">
+                    <input type="number" class="form-control" id="major_bails" disabled value="0">
+                    <label class="form-label" for="major_bails">Major bails</label>
+                </div>
+            </div>
+        </div>
+        <script src="script.js"></script>
+        <br>
         <div class="container" id="footwork">
             <h2>Footwork</h2>
             <div class="row">
@@ -76,29 +205,14 @@
                 </div>
             </div>
         </div>
+        <hr/>
 
-        <div class="container" id="bails">
-            <h2>Consistency</h2>
-            <div class="row">
-                <div class="col-md">
-                    <input type="number" min="0" placeholder="0" step="1" class="form-control" id="minorBails">
-                    <label class="form-label" for="minorBails">Minor bails</label>
-                </div>
-                <div class="col-md">
-                    <input type="number" min="0" placeholder="0" step="1" class="form-control" id="mediumBails">
-                    <label class="form-label" for="mediumBails">Medium bails</label>
-                </div>
-                <div class="col-md">
-                    <input type="number" min="0" placeholder="0" step="1" class="form-control" id="majorBails">
-                    <label class="form-label" for="majorBails">Major bails</label>
-                </div>
-            </div>
-        </div>
+        
         <div class="container" id="variety_and_innovation">
             <h2>Variety and innovation</h2>
             <div class="row">
                 <div class="col-md">
-                    <input type="range" min="0" step="" max="20" value="0" class="form-range" id=trick_balance">
+                    <input type="range" min="0" step="" max="20" value="0" class="form-range" id="trick_balance">
                     <label class="form-label" for="trick_balance">Balanced trick/trick group selection</label>
                 </div>
                 <div class="col-md">
@@ -107,6 +221,7 @@
                 </div>
             </div>
         </div>
+        <hr/>
         <div class="container" id="music">
             <h2>Music choice and synchronization</h2>
             <div class="row">
@@ -120,11 +235,21 @@
                 </div>
             </div>
         </div>
-        <div class="container" id="run_composition">
-            <h2>Run composition</h2>
-            <input type="range" min="0" step="3" max="15" value="0" class="form-range" id="run_composition">
-            <label class="form-label" for="run_composition">Run composition</label>
+        <hr/>
+        <div class="container" id="run_composition_harmony">
+            <h2>Run composition and skate harmony</h2>
+            <div class="row">
+                <div class="col-md">
+                    <input type="range" min="0" step="3" max="15" value="0" class="form-range" id="run_composition">
+                    <label class="form-label" for="run_composition">Run composition</label>
+                </div>
+                <div class="col-md">
+                    <input type="range" min="0" step="2" max="10" value="0" class="form-range" id="area_utilization">
+                    <label class="form-label" for="area_utilization">Area utilization</label>
+                </div>
+            </div>          
         </div>
+        <hr/>
         <div class="container" id="mastery_and_style">
             <h2>Mastery and style</h2>
             <div class="row">
@@ -142,17 +267,122 @@
                 </div>
             </div>
         </div>
+        <hr/>
         <div class="container" id="submission">
-            <div class="btn-group" role="group" aria-label="submit">
-                <button type="button" class="btn btn-primary" id="cancel">Cancel</button>
-                <button type="button" class="btn btn-primary" id="submit">Submit</button>
+            <div class="row">
+                <div class="col-md"><button type="button" class="btn btn-secondary btn-block" id="cancel">Cancel</button></div>
+                <div class="col-md"><button type="button" class="btn btn-primary btn-block" id="submit">Submit</button></div>
             </div>
         </div>
         <div id=""></div>
     <!-- End your project here-->
     <!-- MDB -->
-    <script type="text/javascript" src="js/mdb.min.js"></script>
     <!-- Custom scripts -->
-    <script type="text/javascript"></script>
+    <script type="text/javascript">
+        const submit_button=document.getElementById('submit')
+        submit_button.addEventListener('click', e => {
+
+            //TODO check for rider and judge
+            judge_id=parseInt(document.getElementById('judge').value)
+            rider_id=parseInt(document.getElementById('rider').value)
+            has_ji=!isNaN(judge_id)
+            has_ri=!isNaN(rider_id)
+
+            if(!has_ji)
+                alert("Judge not provided")
+            if(!has_ri)
+                alert("Rider not provided")
+
+            if(has_ji & has_ri){
+                //resolve variables
+                if(document.getElementById('run1').checked)
+                    run=1
+                else
+                    run=2
+
+                if(document.getElementById('qualifiers').checked)
+                    round='qualifiers'
+                else
+                    round='finals'
+
+                p_minor_bails=document.getElementById('minor_bails').value*-1
+                p_medium_bails=document.getElementById('medium_bails').value*-2
+                p_major_bails=document.getElementById('major_bails').value*-3
+                total_bails=minor_bails+medium_bails+major_bails
+                p_trick_points_total=parseFloat(document.getElementById('trick_points_total').value)
+                flawless_victory=0
+                if(total_bails==0 & trick_points_total>0)
+                    flawless_victory=10
+
+                judge_id=parseInt(document.getElementById('judge').value)
+                rider_id=parseInt(document.getElementById('rider').value)
+                
+                json_body={scores:[
+                        {"contest_id":contest_id,"judge_id":judge_id,"rider_id":rider_id,"run_num":run,"contest_round":round,"point_type":"trick_points_total","point_value":p_trick_points_total},
+                        {"contest_id":contest_id,"judge_id":judge_id,"rider_id":rider_id,"run_num":run,"contest_round":round,"point_type":"minor_bails","point_value":p_minor_bails},
+                        {"contest_id":contest_id,"judge_id":judge_id,"rider_id":rider_id,"run_num":run,"contest_round":round,"point_type":"medium_bails","point_value":p_medium_bails},
+                        {"contest_id":contest_id,"judge_id":judge_id,"rider_id":rider_id,"run_num":run,"contest_round":round,"point_type":"major_bails","point_value":p_major_bails},
+                        {"contest_id":contest_id,"judge_id":judge_id,"rider_id":rider_id,"run_num":run,"contest_round":round,"point_type":"footwork_speed","point_value":parseFloat(document.getElementById('footwork_speed').value)},
+                        {"contest_id":contest_id,"judge_id":judge_id,"rider_id":rider_id,"run_num":run,"contest_round":round,"point_type":"footwork_smoothness","point_value":parseFloat(document.getElementById('footwork_smoothness').value)},
+                        {"contest_id":contest_id,"judge_id":judge_id,"rider_id":rider_id,"run_num":run,"contest_round":round,"point_type":"footwork_variety","point_value":parseFloat(document.getElementById('footwork_variety').value)},
+                        {"contest_id":contest_id,"judge_id":judge_id,"rider_id":rider_id,"run_num":run,"contest_round":round,"point_type":"footwork_difficulty","point_value":parseFloat(document.getElementById('footwork_difficulty').value)},
+                        {"contest_id":contest_id,"judge_id":judge_id,"rider_id":rider_id,"run_num":run,"contest_round":round,"point_type":"trick_balance","point_value":parseFloat(document.getElementById('trick_balance').value)},
+                        {"contest_id":contest_id,"judge_id":judge_id,"rider_id":rider_id,"run_num":run,"contest_round":round,"point_type":"rare_or_new_tricks","point_value":parseFloat(document.getElementById('rare_or_new_tricks').value)},
+                        {"contest_id":contest_id,"judge_id":judge_id,"rider_id":rider_id,"run_num":run,"contest_round":round,"point_type":"music_fit_the_run","point_value":parseFloat(document.getElementById('music_fit_the_run').value)},
+                        {"contest_id":contest_id,"judge_id":judge_id,"rider_id":rider_id,"run_num":run,"contest_round":round,"point_type":"run_synchronized_with_music","point_value":parseFloat(document.getElementById('run_synchronized_with_music').value)},
+                        {"contest_id":contest_id,"judge_id":judge_id,"rider_id":rider_id,"run_num":run,"contest_round":round,"point_type":"run_composition","point_value":parseFloat(document.getElementById('run_composition').value)},
+                        {"contest_id":contest_id,"judge_id":judge_id,"rider_id":rider_id,"run_num":run,"contest_round":round,"point_type":"area_utilization","point_value":parseFloat(document.getElementById('area_utilization').value)},
+                        {"contest_id":contest_id,"judge_id":judge_id,"rider_id":rider_id,"run_num":run,"contest_round":round,"point_type":"confident_and_effortless","point_value":parseFloat(document.getElementById('confident_and_effortless').value)},
+                        {"contest_id":contest_id,"judge_id":judge_id,"rider_id":rider_id,"run_num":run,"contest_round":round,"point_type":"trick_flow","point_value":parseFloat(document.getElementById('trick_flow').value)},
+                        {"contest_id":contest_id,"judge_id":judge_id,"rider_id":rider_id,"run_num":run,"contest_round":round,"point_type":"personal_touch","point_value":parseFloat(document.getElementById('personal_touch').value)},
+                        {"contest_id":contest_id,"judge_id":judge_id,"rider_id":rider_id,"run_num":run,"contest_round":round,"point_type":"flawless_victory","point_value":flawless_victory}
+                ]}
+                
+                isExecuted = confirm("Do you want to submit");
+                if(isExecuted){
+                    console.log(JSON.stringify(json_body))
+                    //---------
+                    fetch('http://localhost:8000/set_score', {
+                        method: 'POST', // or 'PUT'
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(json_body),
+                        })
+                        .then((response) => response.json())
+                        .then((data) => {
+                            console.log(data)
+                            post_status=data.status
+                            post_message=data.message
+                            alert(post_status+"\n"+post_message)
+                            //if OK - clean the form
+                            if(status=="OK"){
+                                document.location.reload(true)
+                            }
+                        })
+                        .catch((error) => {
+                            alert("Error saving the results")
+                            console.error('Error:', error);
+                        });
+
+
+
+                }else{
+                    alert("Not submitting")
+                }
+        }
+        })
+    
+        const cancel_button=document.getElementById('cancel')
+        cancel_button.addEventListener('click', e => {
+            isExecuted = confirm("Do you want to reset this form");
+            if(isExecuted){
+                alert('Resetting')
+            }else{
+                alert('Not resetting')
+            }
+        }
+        )
+    </script>
     </body>
 </html>
